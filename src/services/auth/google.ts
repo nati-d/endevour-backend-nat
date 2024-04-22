@@ -3,9 +3,9 @@ import prisma from "../../prisma/index";
 var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 
 passport.use(new GoogleStrategy({
-    clientID: "297273504938-t8cdvjalf06v6229t9e0g2ds2a0k3549.apps.googleusercontent.com",
-    clientSecret: "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",
-    callbackURL: 'http://localhost:3000/auth/google/callback',
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "auth/google/callback",
     scope: [ 'profile', 'email' ]
 },async function verify(accessToken: any, refreshToken: any, profile: any, cb: any) {
 
