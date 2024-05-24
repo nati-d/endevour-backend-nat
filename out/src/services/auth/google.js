@@ -12,30 +12,19 @@ passport_1.default.use(new GoogleStrategy({
     callbackURL: "auth/google/callback",
     scope: ["profile", "email"],
 }, async function verify(accessToken, refreshToken, profile, cb) {
-    let user = await index_1.default.client.user_credential.findFirst({
+    let user = await index_1.default.client.user_credential.upsert({
         where: {
-            credential_id: profile.id,
-            provider: profile.provider,
+            credential_id_provider: {
+                credential_id: profile.id,
+                provider: profile.provider,
+            }
         },
+        update: {},
+        create: {
+            credential_id: profile.id,
+            provider: profile.provider
+        }
     });
-    if (!user) {
-        let newUser = await index_1.default.client.user.create({
-            data: {
-                first_name: profile.given_name,
-                last_name: profile.family_name,
-                email: profile.email,
-                profile_image: profile.picture,
-            },
-        });
-        if (newUser.id)
-            await index_1.default.client.user_credential.create({
-                data: {
-                    user_id: newUser.id,
-                    credential_id: profile.id,
-                    provider: profile.provider,
-                },
-            });
-    }
     return cb(null, profile);
 }));
 passport_1.default.serializeUser((user, done) => {
