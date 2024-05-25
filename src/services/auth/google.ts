@@ -16,32 +16,19 @@ passport.use(
       profile: any,
       cb: any
     ) {
-      let user = await prisma.client.user_credential.findFirst({
+      let user = await prisma.client.user_credential.upsert({
         where: {
-          credential_id: profile.id,
-          provider: profile.provider,
+          credential_id_provider: {
+            credential_id: profile.id,
+            provider: profile.provider,
+          }
         },
+        update: { },
+        create: {
+          credential_id: profile.id,
+          provider: profile.provider
+        }
       });
-
-      if (!user) {
-        let newUser = await prisma.client.user.create({
-          data: {
-            first_name: profile.given_name,
-            last_name: profile.family_name,
-            email: profile.email,
-            profile_image: profile.picture,
-          },
-        });
-
-        if (newUser.id)
-          await prisma.client.user_credential.create({
-            data: {
-              user_id: newUser.id,
-              credential_id: profile.id,
-              provider: profile.provider,
-            },
-          });
-      }
 
       return cb(null, profile);
     }
