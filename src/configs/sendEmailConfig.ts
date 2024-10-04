@@ -11,17 +11,17 @@ const sendEmailConfig = (
   file?: Attachment[]
 ) => {
   const transporter = nodemailer.createTransport({
-    host: "api.endevour.org",
+    host: "api.devidends.org",
     port: 465,
     secure: true,
     auth: {
-      user: "test@api.endevour.org",
-      pass: "Z2Q;@}HCl(Rx",
+      user: "opportunities@devidends.org",
+      pass: "NewYear#2025?",
     },
   });
 
   return transporter.sendMail({
-    from: "test@api.endevour.org",
+    from: "opportunities@devidends.org",
     to: sendTo,
     subject: subject,
     html: html,
